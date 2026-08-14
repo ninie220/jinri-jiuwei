@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4ead0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="今日就位" />
+    <title>今日就位</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="preconnect" href="https://fonts.loli.net" />
+    <link rel="preconnect" href="https://fonts.loli.net" crossorigin />
+    <link href="https://fonts.loli.net/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div id="toast" class="toast" role="status" aria-live="polite">已保存</div>
+      <aside class="sidebar">
+        <div class="brand-wrap">
+          <div class="logo-badge" aria-label="今日就位应用图标">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <rect x="12" y="12" width="96" height="96" rx="24" fill="#f9f1e3" stroke="#1c1c1c" stroke-width="4"/>
+              <circle cx="60" cy="42" r="17" fill="#f4d7c7" stroke="#1c1c1c" stroke-width="4"/>
+              <path d="M42 62c7-8 29-8 36 0" fill="none" stroke="#1c1c1c" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="53" cy="38" r="2.5" fill="#1c1c1c"/>
+              <circle cx="67" cy="38" r="2.5" fill="#1c1c1c"/>
+              <path d="M48 59c5 5 20 5 24 0" fill="none" stroke="#1c1c1c" stroke-width="3" stroke-linecap="round"/>
+              <g transform="translate(25 74)">
+                <rect x="0" y="0" width="70" height="24" rx="8" fill="#fffdf7" stroke="#1c1c1c" stroke-width="3"/>
+                <path d="M18 12h19M18 17h30" stroke="#1c1c1c" stroke-width="3" stroke-linecap="round"/>
+                <path d="M52 5l9 7 11-13" fill="none" stroke="#1c1c1c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              <path d="M35 30l-8 8M84 30l8 8" stroke="#1c1c1c" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">今日就位</div>
+            <div class="brand-sub">糊弄人生记录本</div>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="主导航">
+          <button class="nav-item active" data-page="plan">今日糊弄计划</button>
+          <button class="nav-item" data-page="exercise">被迫运动打卡</button>
+          <button class="nav-item" data-page="body">我的身体小状态</button>
+          <button class="nav-item" data-page="food">好好吃饭别瞎吃</button>
+          <button class="nav-item" data-page="notes">乱七八糟碎碎念</button>
+          <button class="nav-item" data-page="mood">发疯情绪日记本</button>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">今天是</div>
+            <h2 id="todayDate">2026-08-14</h2>
+          </div>
+          <div class="header-actions">
+            <div id="lastSavedLabel" class="last-saved">最近保存：刚刚</div>
+            <button id="installBtn" class="install-btn hidden" type="button">安装应用</button>
+            <span id="onlineStatus" class="status-pill online">在线</span>
+          </div>
+        </header>
+
+        <section class="page active" id="plan">
+          <div class="page-header">
+            <div>
+              <p class="tag">今日状态</p>
+              <h3>今日糊弄计划</h3>
+            </div>
+            <div class="streak-badge">🔥 连续打卡 7 天</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span>今日完成</span>
+              <strong id="doneCount">3</strong>
+            </div>
+            <div class="stat-card">
+              <span>计划项目</span>
+              <strong id="taskTotal">6</strong>
+            </div>
+            <div class="stat-card">
+              <span>本周打卡</span>
+              <strong id="weekCount">4/7</strong>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h4>今日待办</h4>
+              <span id="progressText">50%</span>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="task-form">
+              <input id="taskInput" type="text" placeholder="加一条今天想做的事..." />
+              <button id="addTaskBtn">加上</button>
+            </div>
+            <ul id="taskList" class="task-list"></ul>
+          </div>
+        </section>
+
+        <section class="page" id="exercise">
+          <div class="page-header">
+            <div>
+              <p class="tag">运动</p>
+              <h3>被迫运动打卡</h3>
+            </div>
+            <div class="streak-badge">本周 155 分钟</div>
+          </div>
+
+          <div class="panel form-panel">
+            <h4>今日运动记录</h4>
+            <div class="two-col">
+              <label>
+                <span>运动项目</span>
+                <input id="exerciseName" type="text" placeholder="例如：散步、跑步、跳操" />
+              </label>
+              <label>
+                <span>运动时长</span>
+                <input id="exerciseMinutes" type="number" min="1" placeholder="分钟" />
+              </label>
+            </div>
+            <button class="primary-btn" id="addExerciseBtn">打卡成功</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h4>运动记录</h4>
+              <span>最近 7 天</span>
+            </div>
+            <ul id="exerciseList" class="record-list"></ul>
+          </div>
+        </section>
+
+        <section class="page" id="body">
+          <div class="page-header">
+            <div>
+              <p class="tag">身体</p>
+              <h3>我的身体小状态</h3>
+            </div>
+            <div class="streak-badge">今天还行</div>
+          </div>
+
+          <div class="panel form-panel">
+            <h4>身体小状态记录</h4>
+            <div class="three-col">
+              <label>
+                <span>体重</span>
+                <input id="weightInput" type="number" step="0.1" placeholder="kg" />
+              </label>
+              <label>
+                <span>身高</span>
+                <input id="heightInput" type="number" step="0.1" placeholder="cm" />
+              </label>
+              <label>
+                <span>睡眠</span>
+                <input id="sleepInput" type="number" min="0" placeholder="小时" />
+              </label>
+            </div>
+            <div class="two-col">
+              <label>
+                <span>能量值</span>
+                <input id="energyInput" type="number" min="1" max="10" placeholder="1-10" />
+              </label>
+              <label>
+                <span>状态</span>
+                <select id="bodyStateInput">
+                  <option value="正常">正常</option>
+                  <option value="疲惫">疲惫</option>
+                  <option value="轻松">轻松</option>
+                  <option value="困">困</option>
+                  <option value="酸痛">酸痛</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              <span>备注</span>
+              <textarea id="bodyNote" rows="3" placeholder="今天状态怎么样？今天怎么想的？"></textarea>
+            </label>
+            <button class="primary-btn" id="addBodyBtn">保存身体状态</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h4>历史记录</h4>
+              <span>按日期看</span>
+            </div>
+            <ul id="bodyList" class="record-list"></ul>
+          </div>
+        </section>
+
+        <section class="page" id="food">
+          <div class="page-header">
+            <div>
+              <p class="tag">饮食</p>
+              <h3>好好吃饭别瞎吃</h3>
+            </div>
+            <div class="streak-badge">三餐记录</div>
+          </div>
+
+          <div class="panel form-panel">
+            <h4>今日三餐</h4>
+            <div class="three-col food-grid">
+              <label>
+                <span>早餐</span>
+                <input id="breakfastInput" type="text" placeholder="例：面包+牛奶" />
+              </label>
+              <label>
+                <span>午餐</span>
+                <input id="lunchInput" type="text" placeholder="例：米饭+鸡腿" />
+              </label>
+              <label>
+                <span>晚餐</span>
+                <input id="dinnerInput" type="text" placeholder="例：番茄炒蛋" />
+              </label>
+            </div>
+            <button class="primary-btn" id="addFoodBtn">记住今天吃了什么</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h4>饮食记录</h4>
+              <span>最近记录</span>
+            </div>
+            <ul id="foodList" class="record-list"></ul>
+          </div>
+        </section>
+
+        <section class="page" id="notes">
+          <div class="page-header">
+            <div>
+              <p class="tag">吐槽</p>
+              <h3>乱七八糟碎碎念</h3>
+            </div>
+            <div class="streak-badge">发泄口袋</div>
+          </div>
+
+          <div class="panel form-panel">
+            <h4>随手记</h4>
+            <textarea id="noteInput" rows="5" placeholder="今天突然想说点什么？例如：为什么今天还在想工作，明明没干啥..."></textarea>
+            <button class="primary-btn" id="addNoteBtn">丢进记录本</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h4>碎碎念列表</h4>
+              <span>倒序显示</span>
+            </div>
+            <ul id="noteList" class="note-list"></ul>
+          </div>
+        </section>
+
+        <section class="page" id="mood">
+          <div class="page-header">
+            <div>
+              <p class="tag">情绪</p>
+              <h3>发疯情绪日记本</h3>
+            </div>
+            <div class="streak-badge">今天的感受</div>
+          </div>
+
+          <div class="panel form-panel">
+            <h4>记录今天的心情</h4>
+            <div class="mood-grid">
+              <button class="mood-select active" data-mood="开心">开心</button>
+              <button class="mood-select" data-mood="放松">放松</button>
+              <button class="mood-select" data-mood="疲惫">疲惫</button>
+              <button class="mood-select" data-mood="烦躁">烦躁</button>
+              <button class="mood-select" data-mood="焦虑">焦虑</button>
+              <button class="mood-select" data-mood="平静">平静</button>
+            </div>
+            <textarea id="moodInput" rows="6" placeholder="写下今天的心情和碎片吧..."></textarea>
+            <button class="primary-btn" id="addMoodBtn">保存今天的日记</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h4>历史日记</h4>
+              <span>看自己走过的心情路</span>
+            </div>
+            <ul id="moodList" class="record-list"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

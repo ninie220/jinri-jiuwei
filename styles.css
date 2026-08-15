@@ -652,6 +652,8 @@ textarea {
   }
 
   .app-shell {
+    /* 手机端改为上下布局：菜单在上，内容在下 */
+    flex-direction: column;
     width: min(100%, 430px);
     min-height: calc(100vh - 20px);
     border-radius: 28px;
@@ -724,7 +726,8 @@ textarea {
   }
 
   .nav-list {
-    grid-template-columns: 1fr;
+    /* 小屏保持两列，避免菜单把整个屏幕占满 */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .brand-title {

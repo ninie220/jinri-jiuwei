@@ -16,10 +16,14 @@
     <link href="https://fonts.loli.net/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="menu-open">
     <div class="app-shell">
       <div id="toast" class="toast" role="status" aria-live="polite">已保存</div>
       <aside class="sidebar">
+        <div class="menu-date">
+          <div class="eyebrow">今天是</div>
+          <div id="menuDate" class="menu-date-text">2026-08-15</div>
+        </div>
         <div class="brand-wrap">
           <div class="logo-badge" aria-label="今日就位应用图标">
             <svg viewBox="0 0 120 120" aria-hidden="true">
@@ -44,20 +48,21 @@
         </div>
 
         <nav class="nav-list" aria-label="主导航">
-          <button class="nav-item active" data-page="plan">今日计划</button>
-          <button class="nav-item" data-page="exercise">运动打卡</button>
-          <button class="nav-item" data-page="body">我的 body</button>
-          <button class="nav-item" data-page="food">饮食记录</button>
-          <button class="nav-item" data-page="notes">碎碎念</button>
-          <button class="nav-item" data-page="mood">情绪日记</button>
+          <button class="nav-item active" data-page="plan"><span class="nav-emoji" aria-hidden="true">📝</span>今日计划</button>
+          <button class="nav-item" data-page="exercise"><span class="nav-emoji" aria-hidden="true">🏃</span>运动打卡</button>
+          <button class="nav-item" data-page="body"><span class="nav-emoji" aria-hidden="true">💪</span>我的 body</button>
+          <button class="nav-item" data-page="food"><span class="nav-emoji" aria-hidden="true">🍚</span>饮食记录</button>
+          <button class="nav-item" data-page="notes"><span class="nav-emoji" aria-hidden="true">💬</span>碎碎念</button>
+          <button class="nav-item" data-page="mood"><span class="nav-emoji" aria-hidden="true">🌈</span>情绪日记</button>
         </nav>
       </aside>
 
       <main class="main-panel">
         <header class="topbar">
+          <button id="backBtn" class="back-btn" type="button" aria-label="返回菜单">← 菜单</button>
           <div>
             <div class="eyebrow">今天是</div>
-            <h2 id="todayDate">2026-08-14</h2>
+            <h2 id="todayDate">2026-08-15</h2>
           </div>
           <div class="header-actions">
             <div id="lastSavedLabel" class="last-saved">最近保存：刚刚</div>

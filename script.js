@@ -113,6 +113,12 @@ if (dateLabel) {
   dateLabel.textContent = formatDate(today);
 }
 
+// 菜单首页上的日期与内容页保持一致
+const menuDate = document.getElementById('menuDate');
+if (menuDate) {
+  menuDate.textContent = formatDate(today);
+}
+
 const navButtons = document.querySelectorAll('.nav-item');
 navButtons.forEach((button) => {
   button.addEventListener('click', () => {
@@ -120,7 +126,15 @@ navButtons.forEach((button) => {
     document.querySelectorAll('.page').forEach((page) => {
       page.classList.toggle('active', page.id === button.dataset.page);
     });
+    // 点菜单项：从菜单首页进入对应内容页
+    document.body.classList.remove('menu-open');
   });
+});
+
+// 内容页左上角的「← 菜单」返回菜单首页
+const backBtn = document.getElementById('backBtn');
+backBtn?.addEventListener('click', () => {
+  document.body.classList.add('menu-open');
 });
 
 function loadData(key, fallback) {

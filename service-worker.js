@@ -1,5 +1,5 @@
 // 更新文件后，把版本号 +1（如 v3），手机下次打开会自动更新缓存
-const CACHE_NAME = 'today-standby-v2';
+const CACHE_NAME = 'today-standby-v3';
 const ASSETS = [
   './',
   './index.html',

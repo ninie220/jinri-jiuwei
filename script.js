@@ -1,35 +1,14 @@
-const DEFAULT_TASKS = [
-  { id: crypto.randomUUID(), text: '起床，喝口水', done: true },
-  { id: crypto.randomUUID(), text: '出门走一圈', done: false },
-  { id: crypto.randomUUID(), text: '写一段今日总结', done: false },
-  { id: crypto.randomUUID(), text: '别熬夜', done: false }
-];
+const DEFAULT_TASKS = [];
 
-const DEFAULT_EXERCISES = [
-  { id: crypto.randomUUID(), name: '散步', minutes: 25, date: '2026-08-13' },
-  { id: crypto.randomUUID(), name: '拉伸', minutes: 15, date: '2026-08-12' },
-  { id: crypto.randomUUID(), name: '跑步', minutes: 35, date: '2026-08-10' }
-];
+const DEFAULT_EXERCISES = [];
 
-const DEFAULT_BODY = [
-  { id: crypto.randomUUID(), weight: 62.5, height: 168, sleep: 7.5, energy: 7, state: '正常', note: '今天状态一般，得多喝水', date: '2026-08-13' },
-  { id: crypto.randomUUID(), weight: 62.7, height: 168, sleep: 6.8, energy: 6, state: '疲惫', note: '有点累，但还行', date: '2026-08-12' }
-];
+const DEFAULT_BODY = [];
 
-const DEFAULT_FOOD = [
-  { id: crypto.randomUUID(), breakfast: '牛奶+面包', lunch: '鸡腿饭', dinner: '番茄蛋', date: '2026-08-13' },
-  { id: crypto.randomUUID(), breakfast: '粥+鸡蛋', lunch: '沙拉', dinner: '面条', date: '2026-08-12' }
-];
+const DEFAULT_FOOD = [];
 
-const DEFAULT_NOTES = [
-  { id: crypto.randomUUID(), text: '今天突然想摆烂，但我还是把东西收拾了一点点，算是胜利。', date: '2026-08-13' },
-  { id: crypto.randomUUID(), text: '为什么总想在最累的时候开始自律？我想先休息一下，再认真一点。', date: '2026-08-12' }
-];
+const DEFAULT_NOTES = [];
 
-const DEFAULT_MOODS = [
-  { id: crypto.randomUUID(), mood: '焦虑', text: '今天有点烦，脑子里一堆想法，先写下来再继续生活。', date: '2026-08-13' },
-  { id: crypto.randomUUID(), mood: '开心', text: '今天吃了好吃的东西，心情还不错。', date: '2026-08-12' }
-];
+const DEFAULT_MOODS = [];
 
 const storageKeys = {
   tasks: 'jim-task-list',
@@ -70,6 +49,62 @@ function showToast(message = '已保存') {
   toast.classList.add('show');
   window.clearTimeout(showToast.timer);
   showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+function exportLocalData() {
+  const exportData = {
+    tasks: state.tasks,
+    exercises: state.exercises,
+    body: state.body,
+    food: state.food,
+    notes: state.notes,
+    mood: state.mood,
+    selectedMood: state.selectedMood,
+    exportedAt: new Date().toISOString()
+  };
+
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `今日就位-数据-${formatDate(new Date())}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+  showToast('本地数据已导出');
+}
+
+function clearAllLocalData() {
+  const confirmed = window.confirm('确定要清空本地数据吗？会删除所有记录。');
+  if (!confirmed) return;
+
+  Object.entries(storageKeys).forEach(([keyName, keyValue]) => {
+    localStorage.removeItem(keyValue);
+  });
+
+  state.tasks = [];
+  state.exercises = [];
+  state.body = [];
+  state.food = [];
+  state.notes = [];
+  state.mood = [];
+  state.selectedMood = '开心';
+
+  saveData(storageKeys.tasks, state.tasks);
+  saveData(storageKeys.exercises, state.exercises);
+  saveData(storageKeys.body, state.body);
+  saveData(storageKeys.food, state.food);
+  saveData(storageKeys.notes, state.notes);
+  saveData(storageKeys.mood, state.mood);
+  saveData(storageKeys.moodChoice, state.selectedMood);
+
+  renderPlan();
+  renderExercises();
+  renderBody();
+  renderFood();
+  renderNotes();
+  renderMood();
+  setMoodSelection(state.selectedMood);
+  showToast('本地数据已清空');
 }
 
 const today = new Date();
@@ -214,6 +249,30 @@ function deleteMoodRecord(id) {
   renderMood();
 }
 
+function renderExerciseStats() {
+  const container = document.getElementById('exerciseStats');
+  if (!container) return;
+
+  const totalMinutes = state.exercises.reduce((sum, item) => sum + Number(item.minutes || 0), 0);
+  const sessions = state.exercises.length;
+  const avgMinutes = sessions ? Math.round(totalMinutes / sessions) : 0;
+
+  container.innerHTML = `
+    <div class="mini-stat">
+      <span>累计运动</span>
+      <strong>${totalMinutes} 分钟</strong>
+    </div>
+    <div class="mini-stat">
+      <span>记录次数</span>
+      <strong>${sessions} 次</strong>
+    </div>
+    <div class="mini-stat">
+      <span>平均时长</span>
+      <strong>${avgMinutes} 分钟</strong>
+    </div>
+  `;
+}
+
 function renderExercises() {
   const list = document.getElementById('exerciseList');
   if (!list) return;
@@ -235,6 +294,8 @@ function renderExercises() {
       `
     )
     .join('');
+
+  renderExerciseStats();
 }
 
 function addExercise() {
@@ -259,6 +320,34 @@ document.getElementById('exerciseList')?.addEventListener('click', (event) => {
     deleteExercise(target.dataset.id);
   }
 });
+
+function renderBodyStats() {
+  const container = document.getElementById('bodyStats');
+  if (!container) return;
+
+  const weights = state.body.map((item) => Number(item.weight || 0)).filter(Boolean);
+  const sleeps = state.body.map((item) => Number(item.sleep || 0)).filter(Boolean);
+  const energies = state.body.map((item) => Number(item.energy || 0)).filter(Boolean);
+
+  const latestWeight = weights.at(-1) || 0;
+  const avgSleep = sleeps.length ? (sleeps.reduce((sum, value) => sum + value, 0) / sleeps.length).toFixed(1) : '0.0';
+  const avgEnergy = energies.length ? (energies.reduce((sum, value) => sum + value, 0) / energies.length).toFixed(1) : '0.0';
+
+  container.innerHTML = `
+    <div class="mini-stat">
+      <span>最近体重</span>
+      <strong>${latestWeight ? `${latestWeight} kg` : '--'}</strong>
+    </div>
+    <div class="mini-stat">
+      <span>平均睡眠</span>
+      <strong>${avgSleep} 小时</strong>
+    </div>
+    <div class="mini-stat">
+      <span>平均能量</span>
+      <strong>${avgEnergy}/10</strong>
+    </div>
+  `;
+}
 
 function renderBody() {
   const list = document.getElementById('bodyList');
@@ -286,6 +375,8 @@ function renderBody() {
       `
     )
     .join('');
+
+  renderBodyStats();
 }
 
 function addBody() {
@@ -328,6 +419,31 @@ document.getElementById('bodyList')?.addEventListener('click', (event) => {
   }
 });
 
+function renderFoodStats() {
+  const container = document.getElementById('foodStats');
+  if (!container) return;
+
+  const totalMeals = state.food.reduce((sum, item) => sum + [item.breakfast, item.lunch, item.dinner].filter(Boolean).length, 0);
+  const breakfastCount = state.food.filter((item) => item.breakfast).length;
+  const lunchCount = state.food.filter((item) => item.lunch).length;
+  const dinnerCount = state.food.filter((item) => item.dinner).length;
+
+  container.innerHTML = `
+    <div class="mini-stat">
+      <span>总记录</span>
+      <strong>${state.food.length} 天</strong>
+    </div>
+    <div class="mini-stat">
+      <span>三餐合计</span>
+      <strong>${totalMeals} 次</strong>
+    </div>
+    <div class="mini-stat">
+      <span>早餐/午餐/晚餐</span>
+      <strong>${breakfastCount}/${lunchCount}/${dinnerCount}</strong>
+    </div>
+  `;
+}
+
 function renderFood() {
   const list = document.getElementById('foodList');
   if (!list) return;
@@ -352,6 +468,8 @@ function renderFood() {
       `
     )
     .join('');
+
+  renderFoodStats();
 }
 
 function addFood() {
@@ -385,6 +503,30 @@ document.getElementById('foodList')?.addEventListener('click', (event) => {
   }
 });
 
+function renderNotesStats() {
+  const container = document.getElementById('notesStats');
+  if (!container) return;
+
+  const total = state.notes.length;
+  const longest = state.notes.reduce((max, note) => Math.max(max, note.text.length), 0);
+  const average = total ? Math.round(state.notes.reduce((sum, note) => sum + note.text.length, 0) / total) : 0;
+
+  container.innerHTML = `
+    <div class="mini-stat">
+      <span>碎碎念数</span>
+      <strong>${total} 条</strong>
+    </div>
+    <div class="mini-stat">
+      <span>最长记录</span>
+      <strong>${longest} 字</strong>
+    </div>
+    <div class="mini-stat">
+      <span>平均长度</span>
+      <strong>${average} 字</strong>
+    </div>
+  `;
+}
+
 function renderNotes() {
   const list = document.getElementById('noteList');
   if (!list) return;
@@ -406,6 +548,8 @@ function renderNotes() {
       `
     )
     .join('');
+
+  renderNotesStats();
 }
 
 function addNote() {
@@ -427,6 +571,33 @@ document.getElementById('noteList')?.addEventListener('click', (event) => {
     deleteNoteRecord(target.dataset.id);
   }
 });
+
+function renderMoodStats() {
+  const container = document.getElementById('moodStats');
+  if (!container) return;
+
+  const counts = state.mood.reduce((acc, item) => {
+    acc[item.mood] = (acc[item.mood] || 0) + 1;
+    return acc;
+  }, {});
+
+  const topMood = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+
+  container.innerHTML = `
+    <div class="mini-stat">
+      <span>总记录</span>
+      <strong>${state.mood.length} 条</strong>
+    </div>
+    <div class="mini-stat">
+      <span>最多情绪</span>
+      <strong>${topMood ? topMood[0] : '暂无'}</strong>
+    </div>
+    <div class="mini-stat">
+      <span>出现次数</span>
+      <strong>${topMood ? topMood[1] : 0} 次</strong>
+    </div>
+  `;
+}
 
 function renderMood() {
   const list = document.getElementById('moodList');
@@ -453,6 +624,8 @@ function renderMood() {
       `
     )
     .join('');
+
+  renderMoodStats();
 }
 
 function setMoodSelection(mood) {
@@ -486,6 +659,9 @@ document.getElementById('moodList')?.addEventListener('click', (event) => {
     deleteMoodRecord(target.dataset.id);
   }
 });
+
+document.getElementById('exportBtn')?.addEventListener('click', exportLocalData);
+document.getElementById('clearBtn')?.addEventListener('click', clearAllLocalData);
 
 const installBtn = document.getElementById('installBtn');
 

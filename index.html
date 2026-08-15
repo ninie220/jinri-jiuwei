@@ -44,12 +44,12 @@
         </div>
 
         <nav class="nav-list" aria-label="主导航">
-          <button class="nav-item active" data-page="plan">今日糊弄计划</button>
-          <button class="nav-item" data-page="exercise">被迫运动打卡</button>
-          <button class="nav-item" data-page="body">我的身体小状态</button>
-          <button class="nav-item" data-page="food">好好吃饭别瞎吃</button>
-          <button class="nav-item" data-page="notes">乱七八糟碎碎念</button>
-          <button class="nav-item" data-page="mood">发疯情绪日记本</button>
+          <button class="nav-item active" data-page="plan">今日计划</button>
+          <button class="nav-item" data-page="exercise">运动打卡</button>
+          <button class="nav-item" data-page="body">我的 body</button>
+          <button class="nav-item" data-page="food">饮食记录</button>
+          <button class="nav-item" data-page="notes">碎碎念</button>
+          <button class="nav-item" data-page="mood">情绪日记</button>
         </nav>
       </aside>
 
@@ -61,6 +61,8 @@
           </div>
           <div class="header-actions">
             <div id="lastSavedLabel" class="last-saved">最近保存：刚刚</div>
+            <button id="exportBtn" class="mini-btn" type="button">导出</button>
+            <button id="clearBtn" class="mini-btn danger" type="button">清空</button>
             <button id="installBtn" class="install-btn hidden" type="button">安装应用</button>
             <span id="onlineStatus" class="status-pill online">在线</span>
           </div>
@@ -70,7 +72,7 @@
           <div class="page-header">
             <div>
               <p class="tag">今日状态</p>
-              <h3>今日糊弄计划</h3>
+              <h3>今日计划</h3>
             </div>
             <div class="streak-badge">🔥 连续打卡 7 天</div>
           </div>
@@ -113,10 +115,12 @@
           <div class="page-header">
             <div>
               <p class="tag">运动</p>
-              <h3>被迫运动打卡</h3>
+              <h3>运动打卡</h3>
             </div>
             <div class="streak-badge">本周 155 分钟</div>
           </div>
+
+          <div id="exerciseStats" class="mini-stats"></div>
 
           <div class="panel form-panel">
             <h4>今日运动记录</h4>
@@ -146,14 +150,16 @@
           <div class="page-header">
             <div>
               <p class="tag">身体</p>
-              <h3>我的身体小状态</h3>
+              <h3>我的 body</h3>
             </div>
             <div class="streak-badge">今天还行</div>
           </div>
 
+          <div id="bodyStats" class="mini-stats"></div>
+
           <div class="panel form-panel">
             <h4>身体小状态记录</h4>
-            <div class="three-col">
+            <div class="body-grid">
               <label>
                 <span>体重</span>
                 <input id="weightInput" type="number" step="0.1" placeholder="kg" />
@@ -166,8 +172,6 @@
                 <span>睡眠</span>
                 <input id="sleepInput" type="number" min="0" placeholder="小时" />
               </label>
-            </div>
-            <div class="two-col">
               <label>
                 <span>能量值</span>
                 <input id="energyInput" type="number" min="1" max="10" placeholder="1-10" />
@@ -182,11 +186,11 @@
                   <option value="酸痛">酸痛</option>
                 </select>
               </label>
+              <label>
+                <span>备注</span>
+                <textarea id="bodyNote" rows="3" placeholder="今天状态怎么样？今天怎么想的？"></textarea>
+              </label>
             </div>
-            <label>
-              <span>备注</span>
-              <textarea id="bodyNote" rows="3" placeholder="今天状态怎么样？今天怎么想的？"></textarea>
-            </label>
             <button class="primary-btn" id="addBodyBtn">保存身体状态</button>
           </div>
 
@@ -203,10 +207,12 @@
           <div class="page-header">
             <div>
               <p class="tag">饮食</p>
-              <h3>好好吃饭别瞎吃</h3>
+              <h3>饮食记录</h3>
             </div>
             <div class="streak-badge">三餐记录</div>
           </div>
+
+          <div id="foodStats" class="mini-stats"></div>
 
           <div class="panel form-panel">
             <h4>今日三餐</h4>
@@ -240,10 +246,12 @@
           <div class="page-header">
             <div>
               <p class="tag">吐槽</p>
-              <h3>乱七八糟碎碎念</h3>
+              <h3>碎碎念</h3>
             </div>
             <div class="streak-badge">发泄口袋</div>
           </div>
+
+          <div id="notesStats" class="mini-stats"></div>
 
           <div class="panel form-panel">
             <h4>随手记</h4>
@@ -264,10 +272,12 @@
           <div class="page-header">
             <div>
               <p class="tag">情绪</p>
-              <h3>发疯情绪日记本</h3>
+              <h3>情绪日记</h3>
             </div>
             <div class="streak-badge">今天的感受</div>
           </div>
+
+          <div id="moodStats" class="mini-stats"></div>
 
           <div class="panel form-panel">
             <h4>记录今天的心情</h4>

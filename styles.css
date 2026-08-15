@@ -24,7 +24,7 @@ html, body {
   background: var(--bg);
   color: var(--ink);
   font-family: "ZCOOL KuaiLe", "Microsoft YaHei", cursive;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 body {
@@ -60,35 +60,42 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
 }
 
+input, textarea, select {
+  min-height: 46px;
+}
+
 .app-shell {
   display: flex;
-  min-height: calc(100vh - 32px);
-  width: min(100%, 1280px);
+  flex-direction: row;
+  height: calc(100vh - 20px);
+  max-height: 920px;
+  width: min(100%, 430px);
   margin: 0 auto;
-  background: rgba(255, 250, 240, 0.75);
+  background: rgba(255, 250, 240, 0.8);
   border: 3px solid var(--line);
-  border-radius: 30px;
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 18px 0 rgba(17, 17, 17, 0.08);
+  box-shadow: 0 14px 0 rgba(17, 17, 17, 0.08);
   backdrop-filter: blur(6px);
 }
 
 .sidebar {
-  width: 260px;
+  width: 128px;
+  min-width: 128px;
   background: rgba(255, 250, 240, 0.82);
   border-right: 3px solid var(--line);
-  padding: 24px 18px 18px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  padding: 12px 8px 12px;
+  position: static;
+  top: auto;
+  height: auto;
 }
 
 .brand-wrap {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 30px;
-  padding: 10px 8px;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 8px 6px;
 }
 
 .logo-badge {
@@ -125,7 +132,8 @@ input:focus, textarea:focus, select:focus {
 .nav-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  padding-bottom: 2px;
 }
 
 .nav-item {
@@ -134,12 +142,17 @@ input:focus, textarea:focus, select:focus {
   border-radius: 18px;
   background: var(--panel);
   color: var(--ink);
-  text-align: left;
-  padding: 14px 14px;
-  font-size: 1rem;
+  text-align: center;
+  padding: 14px 8px;
+  font-size: 0.78rem;
+  line-height: 1.35;
   box-shadow: 4px 4px 0 rgba(17, 17, 17, 0.08);
   transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-  min-height: 52px;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
 }
 
 .nav-item:hover,
@@ -152,8 +165,12 @@ input:focus, textarea:focus, select:focus {
 
 .main-panel {
   flex: 1;
-  padding: 26px 28px 40px;
+  min-width: 0;
+  padding: 18px 14px 24px;
   background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0));
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .topbar {
@@ -164,6 +181,11 @@ input:focus, textarea:focus, select:focus {
   padding: 8px 6px 18px;
   border-bottom: 3px dashed rgba(43, 42, 42, 0.35);
   margin-bottom: 22px;
+}
+
+.page,
+.main-panel > section {
+  min-height: 100%;
 }
 
 .eyebrow {
@@ -208,7 +230,8 @@ input:focus, textarea:focus, select:focus {
   background: rgba(243, 217, 154, 0.42);
 }
 
-.install-btn {
+.install-btn,
+.mini-btn {
   border: 2px solid var(--line);
   background: var(--accent);
   color: var(--accent-ink);
@@ -217,6 +240,17 @@ input:focus, textarea:focus, select:focus {
   font-size: 0.72rem;
   font-weight: 700;
   box-shadow: 4px 4px 0 rgba(17, 17, 17, 0.08);
+}
+
+.mini-btn {
+  background: #fffdf7;
+  color: var(--ink);
+  padding: 7px 12px;
+}
+
+.mini-btn.danger {
+  background: #f3d9d1;
+  color: var(--ink);
 }
 
 .install-btn.hidden {
@@ -253,12 +287,13 @@ body.is-installed .install-btn {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .page-header h3 {
   margin: 6px 0 0;
-  font-size: clamp(1.7rem, 2.3vw, 2.5rem);
+  font-size: clamp(1.8rem, 2.8vw, 2.7rem);
+  line-height: 1.2;
 }
 
 .tag {
@@ -268,9 +303,50 @@ body.is-installed .install-btn {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 22px;
+  width: 100%;
+}
+
+.stat-card {
+  min-width: 0;
+  width: 100%;
+}
+
+.mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.mini-stat {
+  background: rgba(255, 250, 240, 0.82);
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 4px 4px 0 rgba(17, 17, 17, 0.04);
+}
+
+.mini-stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  margin-bottom: 6px;
+}
+
+.mini-stat strong {
+  font-size: 1.1rem;
+}
+
+.stat-card,
+.panel,
+.task-item,
+.record-item,
+.note-item {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .stat-card,
@@ -296,11 +372,12 @@ body.is-installed .install-btn {
 
 .stat-card strong {
   font-size: clamp(1.6rem, 2vw, 2.4rem);
+  line-height: 1.1;
 }
 
 .panel {
   padding: 18px 18px 20px;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 
 .panel-head {
@@ -340,7 +417,10 @@ body.is-installed .install-btn {
 }
 
 .task-form {
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: stretch;
   margin-bottom: 16px;
 }
 
@@ -367,8 +447,9 @@ button.primary-btn,
   background: var(--accent);
   color: var(--accent-ink);
   border-radius: 14px;
-  padding: 12px 18px;
+  padding: 13px 18px;
   font-weight: 700;
+  min-height: 48px;
   box-shadow: 4px 4px 0 rgba(17, 17, 17, 0.08);
 }
 
@@ -411,7 +492,7 @@ button.primary-btn,
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 15px 16px;
   border: 2px solid var(--line);
   border-radius: 16px;
   background: rgba(255,255,255,0.35);
@@ -488,6 +569,25 @@ button.primary-btn,
   grid-template-columns: repeat(3, minmax(0,1fr));
 }
 
+.food-grid,
+.body-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.food-grid label,
+.body-grid label {
+  min-height: 94px;
+}
+
+.food-grid input,
+.body-grid input,
+.body-grid select,
+.body-grid textarea {
+  min-height: 54px;
+}
+
 label {
   display: flex;
   flex-direction: column;
@@ -531,6 +631,7 @@ textarea {
 .note-meta {
   color: var(--muted);
   font-size: 0.74rem;
+  line-height: 1.6;
 }
 
 @media (display-mode: standalone) {
@@ -547,13 +648,12 @@ textarea {
 
 @media (max-width: 1000px) {
   body {
-    padding: 14px;
+    padding: 10px;
   }
 
   .app-shell {
-    flex-direction: column;
-    min-height: auto;
-    width: min(100%, 500px);
+    width: min(100%, 430px);
+    min-height: calc(100vh - 20px);
     border-radius: 28px;
   }
 
@@ -563,7 +663,7 @@ textarea {
     position: static;
     border-right: none;
     border-bottom: 3px solid var(--line);
-    padding-bottom: 12px;
+    padding: 16px 12px 10px;
   }
 
   .brand-wrap {
@@ -577,7 +677,7 @@ textarea {
   }
 
   .main-panel {
-    padding: 20px 16px 24px;
+    padding: 16px 12px 20px;
   }
 }
 
@@ -591,21 +691,31 @@ textarea {
   }
 
   .stats-grid,
+  .mini-stats,
   .two-col,
   .three-col,
-  .mood-grid {
+  .mood-grid,
+  .food-grid,
+  .body-grid {
     grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    min-width: 0;
   }
 
   .page-header,
   .topbar,
-  .task-form,
   .panel-head,
   .task-item,
   .record-item,
   .note-item {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .task-form {
+    grid-template-columns: 1fr;
   }
 
   .task-form button,

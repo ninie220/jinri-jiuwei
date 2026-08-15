@@ -712,7 +712,9 @@ window.addEventListener('offline', updateOnlineStatus);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch((error) => {
+    // updateViaCache: 'none' 让浏览器每次都检查 service-worker.js 是否有更新，
+    // 否则 GitHub Pages 的 10 分钟 HTTP 缓存会让手机迟迟发现不了新版本
+    navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'none' }).catch((error) => {
       console.warn('Service worker registration failed:', error);
     });
   });
